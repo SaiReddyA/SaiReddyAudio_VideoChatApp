@@ -1,0 +1,57 @@
+<div class="grid-container" style="display: none;">
+  <aside class="left-sidebar">
+    <app-header class="app-header"></app-header> 
+  </aside>
+  <main class="main">
+    <app-sidebar (userSelected)="onUserSelected($event)"></app-sidebar>
+  </main>
+  <section class="right-pane">
+    <app-chat-area [selectedUsers]="selectedUser"></app-chat-area>
+  </section>
+ </div>
+
+
+ <div class="mobile-container" >
+  <main class="main-body">
+    <app-sidebar (userSelected)="onUserSelected($event)"></app-sidebar>
+  </main>
+  <app-footer class="app-navbar"></app-footer> 
+  <section class="overlay" style="display: none;">
+    <app-chat-area [selectedUsers]="selectedUser"></app-chat-area>
+  </section>
+ </div>
+
+
+<!-- <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
+      
+    </div>
+    <div class="col-md-9">
+      <img src="chat-logo.png" alt="Logo">
+      <i class="fa fa-user icon"></i>
+      <div class="icon active">
+          <i class="fa fa-comment"></i>
+          <span class="badge">9</span>
+      </div>
+      <i class="fa fa-book icon"></i>
+      <i class="fa fa-star icon"></i>
+      <i class="fa fa-cog icon"></i>
+      <i class="fa fa-moon icon"></i>
+      <div class="profile">
+          <img src="user-profile.jpg" alt="Profile">
+      </div>
+    </div>
+  </div>
+</div>
+ -->
+<!-- <div class="sidebar">
+  <app-header></app-header>
+</div>
+<div class="left-pane">
+  
+</div>
+<div class="right-pane">
+  
+</div>
+-->
