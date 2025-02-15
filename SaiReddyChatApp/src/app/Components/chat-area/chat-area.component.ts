@@ -5,12 +5,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../Services/chat.service';
-import { UserInfo , Message} from '../../Interfaces/user-info';
+import { UserInfo , Message, UserCallInfo} from '../../Interfaces/user-info';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { PickerModule } from '@ctrl/ngx-emoji-mart'; 
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { CemeraComponent } from '../cemera/cemera.component';
+import { CallerComponent } from '../caller/caller.component';
 
 
 @Component({
@@ -109,6 +110,12 @@ export class ChatAreaComponent {
       }
     });
     
+    // Subscribe to incoming call notifications
+    this.chatService.incomingCall$.subscribe(fromUser => {
+      if (fromUser) {
+        this.ReceiveCall(fromUser);
+      }
+    });
   // Subscribe to selected user changes and fetch messages dynamically
   // this.chatService.getMessagesForSelectedUser(this.currentUserId).subscribe(messages => {
   //   this.messagesSignal = messages;
@@ -361,18 +368,51 @@ ConvertstringToBlob(basetoBlob:string){
   onAudioLoaded(audio: HTMLAudioElement) {
     this.isAudioLoading = false;
   }
-  // Get Tick Class for Styling
-  getTickClass(message: Message): string {
-    if (message.delivered && !message.read) return 'delivered-tick'; 
-    if (message.read) return 'read-tick';
-    return 'sent-tick'
+  
+  StartCall(isAudioCall:boolean = true){
+    try{
+      const usercall: UserCallInfo = {
+        userId: this.selectedUsers?.userId,
+        connectionId: this.selectedUsers?.connectionId,
+        userName:this.selectedUsers?.userName,
+        lastMessage: this.selectedUsers?.userId,
+        isOnline: true,
+        isReceiving: false,
+        IsAudioCall: isAudioCall
+      };      
+      this.chatService.callUser(this.chatService.getCurrentUserId(), this.selectedUsers?.userId)
+     const dialogRef = this.dialog.open(CallerComponent, {
+        width: '300px',
+        data: usercall,
+        disableClose: true
+      });
+  
+    }catch(er){
+      console.error
+      (er);
+    }
   }
 
-  // Get Tick Icon Based on Message Status
-  getTickIcon(message: Message): string {
-    if (message.read) return 'done_all';  
-    if (message.delivered) return 'done_all';  
-    return 'done'; 
+  ReceiveCall(fromUser: UserInfo, isAudioCall:boolean = true){
+    try{
+      const usercall: UserCallInfo = {
+        userId: fromUser?.userId,
+        connectionId: fromUser?.connectionId,
+        userName: fromUser?.userName,
+        lastMessage: fromUser?.userId,
+        isOnline: true,
+        isReceiving: true,
+        IsAudioCall: isAudioCall
+      };      
+     const dialogRef = this.dialog.open(CallerComponent, {
+        width: '300px',
+        data: usercall,
+        disableClose: true
+      });
+  
+    }catch(er){
+      console.error
+      (er);
+    }
   }
- 
 }

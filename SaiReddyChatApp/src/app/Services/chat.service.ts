@@ -21,7 +21,8 @@ export class ChatService {
   public selectedUser$ = new BehaviorSubject<UserInfo | null>(null);
   private selectedItemSource = new BehaviorSubject<string>('messages'); // Default value
   selectedItem$ = this.selectedItemSource.asObservable();
-
+  private incomingCallSubject = new BehaviorSubject<UserInfo | null>(null);
+  public incomingCall$ = this.incomingCallSubject.asObservable(); // Expose observable
   constructor() {
     this.loadStoredMessages();
   }
@@ -143,16 +144,17 @@ this.hubConnection.on('MessageRead', (fromUser: string, toUser: string) => {
     });
 
     // Handle call events
-    this.hubConnection.on('IncomingCall', (fromUser: string) => {
-      console.log(`📞 Incoming call from ${fromUser}`);
+    this.hubConnection.on('IncomingCall', (fromuser: UserInfo) => {
+      console.log(`📞 Incoming call from ${fromuser}`);
+      this.incomingCallSubject.next(fromuser); 
     });
 
-    this.hubConnection.on('CallAccepted', (user: string) => {
-      console.log(`✅ Call accepted by ${user}`);
+    this.hubConnection.on('CallAccepted', (touser: UserInfo) => {
+      console.log(`✅ Call accepted by ${touser}`);
     });
 
-    this.hubConnection.on('CallRejected', (user: string) => {
-      console.log(`❌ Call rejected by ${user}`);
+    this.hubConnection.on('CallRejected', (touser: UserInfo) => {
+      console.log(`❌ Call rejected by ${touser}`);
     });
 
     this.hubConnection.on('CallEnded', (user: string) => {

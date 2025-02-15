@@ -1,0 +1,21 @@
+<div class="call-container">
+    <div class="avatar-caller">{{ data.userName.charAt(0).toUpperCase() }}</div>
+    <h2>{{ data.userName }}</h2>
+    <p *ngIf="data.isReceiving">Incoming call...</p>
+    <p *ngIf="!data.isReceiving">Calling...</p>
+
+    <div class="button-group">
+      <button *ngIf="data.isReceiving" mat-fab color="primary" (click)="acceptCall()">
+        <mat-icon>call</mat-icon>
+      </button>
+      <button mat-fab color="warn" (click)="endCall()">
+        <mat-icon color="warn">call_end</mat-icon>
+      </button>
+      <button *ngIf="!data.isReceiving" mat-fab (click)="toggleMute()">
+        <mat-icon>{{ isMuted ? 'mic_off' : 'mic' }}</mat-icon>
+      </button>
+      <button *ngIf="!data.isReceiving" mat-fab (click)="toggleSpeaker()">
+        <mat-icon>{{ isSpeakerOn ? 'volume_up' : 'volume_off' }}</mat-icon>
+      </button>
+    </div>
+  </div>

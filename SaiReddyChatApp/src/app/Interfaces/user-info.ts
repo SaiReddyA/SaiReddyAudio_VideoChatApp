@@ -5,6 +5,16 @@ export class UserInfo {
     lastMessage   : string  = "";
     isOnline      : boolean = true;
 }
+export class UserCallInfo implements UserInfo {
+    userId        : string = "" // Unique UserId instead of ConnectionId
+    connectionId! : string 
+    userName      : string = ""
+    lastMessage   : string  = "";
+    isOnline      : boolean = true;
+    isReceiving   : boolean = false;
+    IsAudioCall   : boolean = true
+    
+}
 export class Message {
     from!: string;  // sender's user ID
     to!: string;    // receiver's user ID
