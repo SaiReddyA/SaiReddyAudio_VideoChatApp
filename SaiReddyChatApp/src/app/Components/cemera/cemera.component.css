@@ -1,0 +1,14 @@
+.custom-dialog .mat-dialog-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+  }
+  .mat-cm-buttons{
+    display: flex;
+   
+  }

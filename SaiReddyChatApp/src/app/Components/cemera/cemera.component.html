@@ -1,0 +1,32 @@
+<div mat-dialog-title class="mat-cm-buttons">
+    <h2 >Capture Image</h2>
+    <button  mat-button color="warn" (click)="closeDialog()" style="margin-left: 31%;">
+        <mat-icon class="close-icon" color="warn">close</mat-icon>
+    </button>
+</div>
+
+<mat-dialog-content>
+
+  <!-- Video Preview for Capturing -->
+  <video #video *ngIf="!capturedImage" autoplay style="width: 100%; max-width: 100%;"></video>
+
+  <!-- Capture Button -->
+  
+
+  <!-- Canvas (Hidden) -->
+  <canvas #canvas style="display: none;"></canvas>
+
+  <!-- Display Captured Image -->
+  <img *ngIf="capturedImage" [src]="capturedImage" style="width: 100%; max-width: 100%; margin-top: 10px;" />
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="mat-cm-buttons">
+    <button *ngIf="capturedImage" mat-raised-button color="warn" (click)="retakePicture()">
+        Retake
+      </button>
+      <button *ngIf="!capturedImage" mat-raised-button color="primary" (click)="captureImage()">
+        Capture
+      </button>
+  <button mat-raised-button (click)="SendImage()">Send</button>
+</mat-dialog-actions>

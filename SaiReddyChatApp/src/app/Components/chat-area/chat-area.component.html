@@ -1,0 +1,257 @@
+<div class="main-chat-area d-none" id="chat-pannel">
+  <div class="chat-header">
+    <div class="chat-user-container">
+      <div class="avatar-container">
+        <div class="avatar">{{selectedUsers.userName[0]}}</div>
+        <span class="status-indicator"
+          [ngClass]="{ 'online': selectedUsers.isOnline, 'offline': !selectedUsers.isOnline }"></span>
+      </div>
+      <div>
+        <h5 class="mb-0">{{selectedUsers.userName}}</h5>
+        <p *ngIf="selectedUsers.userName === typingUser" style="color: green;"> typing...</p>
+        <p *ngIf="selectedUsers.isOnline && selectedUsers.userName !== typingUser" style="color: green;">Online</p>
+        <p *ngIf="!selectedUsers.isOnline" style="color: rgb(108 117 125);">Ofline</p>
+      </div>
+    </div>
+    <div class="call-buttons">
+      <button mat-icon-button class="btn btn-link text-decoration-none btn-lg waves-effect">
+        <mat-icon>call</mat-icon>
+      </button>
+      <button mat-icon-button class="btn btn-link text-decoration-none btn-lg waves-effect">
+        <mat-icon>video_call</mat-icon>
+      </button>
+      <button mat-icon-button [matMenuTriggerFor]="topmenu" class="btn btn-link text-decoration-none btn-lg waves-effect">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #topmenu="matMenu">
+        <button mat-menu-item (click)="this.closeChat(false)">Close Chat</button>
+        <button mat-menu-item>Change Theme</button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <div #chatMessages class="chat-messages">
+    <!-- <div *ngFor="let message of messagesSignal" class="message"
+      [ngClass]="{'sent': message.sent, 'received': !message.sent}">
+     <!-- If it's a text message -- >
+     <p *ngIf="message.type !== 'image' && message.type !== 'audio'">{{ message.body }}</p>
+        <!-- If it's an image message -- >
+     <img *ngIf="message.type === 'image'" [src]="message.body" title="it will vanish while changing user"
+      style="width: 100%; max-width: 400px; margin-top: 10px; border-radius: 10px;" />
+      <audio controls *ngIf="message.type === 'audio'">
+        <source [src]="message.body" type="audio/webm">
+      </audio>
+      <span class="time">{{ message.time }}</span>
+    </div> -->
+    
+    <div *ngFor="let message of messagesSignal" class="message-container"
+     [ngClass]="{'sent': message.sent, 'received': !message.sent}">
+  
+  <div class="message-bubble">
+    <!-- Text Message -->
+    <p *ngIf="message.type !== 'image' && message.type !== 'audio'">{{ message.body }}</p>
+
+    <!-- Image Message -->
+    <img *ngIf="message.type === 'image'" [src]="message.body" class="image-message" />
+
+    <!-- Audio Message with Loading Indicator -->
+    <div *ngIf="message.type === 'audio'">
+      <div *ngIf="isAudioLoading" class="loading-indicator">
+        <mat-icon>cloud_download</mat-icon> Downloading...
+      </div>
+      <audio controls #audioPlayer (loadedmetadata)="onAudioLoaded(audioPlayer)">
+        <source [src]="message.body" type="audio/webm">
+      </audio>
+    </div>
+    
+    <!-- Timestamp + Tick Marks -->
+    <div class="message-footer">
+      <span class="time">{{ message.time }}</span>
+      <!-- <mat-icon *ngIf="message.sent" class="tick-icon" [ngClass]="getTickClass(message)">
+        {{ getTickIcon(message) }}
+      </mat-icon> -->
+      <span *ngIf="message.sent">
+        <mat-icon *ngIf="!message.delivered" class="tick-icon">done</mat-icon> <!-- Single tick -->
+        <mat-icon *ngIf="message.delivered && !message.read" class="tick-icon">done_all</mat-icon> <!-- Gray double tick -->
+        <mat-icon *ngIf="message.delivered && message.read" class="tick-icon read-tick" >done_all</mat-icon> <!-- Blue double tick -->
+      </span>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <!-- <div class="chat-input-collapse chat-input-collapse1 collapse show" id="chatinputmorecollapse" *ngIf="showMoreInfo">
+      <div class="card mb-0">
+          <div class="card-body py-3">
+              
+              <div class="swiper chatinput-links swiper-initialized swiper-horizontal swiper-pointer-events">
+                  <div class="swiper-wrapper" id="swiper-wrapper-fa6855d7ad857648" aria-live="polite">
+                      <div class="swiper-slide swiper-slide-active" role="group" aria-label="1 / 7" style="width: 141px; margin-right: 30px;">
+                          <div class="text-center px-2 position-relative">
+                              <div>
+                                  <input id="attachedfile-input" type="file" class="d-none" accept=".zip,.rar,.7zip,.pdf" multiple="">
+                                  <label for="attachedfile-input" class="avatar-sm mx-auto hyperlink">
+                                      <span class="avatar-title fs-18  text-primary  text-primary rounded-circle">
+                                        <mat-icon> attach_file</mat-icon>
+                                      </span>
+                                  </label>
+                              </div>
+                              <h5 class="fs-11 text-uppercase mt-3 mb-0 text-body text-truncate">
+                                  Attached</h5>
+                          </div>
+                      </div>
+                      <div class="swiper-slide swiper-slide-next" role="group" aria-label="2 / 7" style="width: 141px; margin-right: 30px;">
+                          <div class="text-center px-2">
+                              <div class="avatar-sm mx-auto">
+                                  <div class="avatar-title fs-18  
+text-primary  text-primary rounded-circle">
+                                    <mat-icon>camera_enhance</mat-icon>
+                                  </div>
+                              </div>
+                              <h5 class="fs-11 text-uppercase text-truncate mt-3 mb-0"><a href="#" class="text-body hyperlink " onclick="cameraPermission()">Camera</a></h5>
+                          </div>
+                      </div>
+                      <div class="swiper-slide" role="group" aria-label="3 / 7" style="width: 141px; margin-right: 30px;">
+                          <div class="text-center px-2 position-relative">
+                              <div>
+                                  <input id="galleryfile-input" type="file" class="d-none" accept="image/png, image/gif, image/jpeg" multiple="">
+                                  <label for="galleryfile-input" class="avatar-sm mx-auto hyperlink">
+                                      <span class="avatar-title fs-18 
+text-primary  text-primary rounded-circle">
+<i class="bi bi-images"></i>
+                                      </span>
+                                  </label>
+                              </div>
+                              <h5 class="fs-11 text-uppercase text-truncate mt-3 mb-0">Gallery
+                              </h5>
+                          </div>
+                      </div>
+                      <div class="swiper-slide" role="group" aria-label="4 / 7" style="width: 141px; margin-right: 30px;">
+                          <div class="text-center px-2">
+                              <div>
+                                  <input id="audiofile-input" type="file" class="d-none" accept="audio/*" multiple="">
+                                  <label for="audiofile-input" class="avatar-sm mx-auto hyperlink">
+                                      <span class="avatar-title fs-18 
+text-primary  text-primary rounded-circle">
+<i class="bi bi-headphones"></i>                                      </span>
+                                  </label>
+                              </div>
+                              <h5 class="fs-11 text-uppercase text-truncate mt-3 mb-0">Audio</h5>
+                          </div>
+                      </div>
+                      <div class="swiper-slide" role="group" aria-label="5 / 7" style="width: 141px; margin-right: 30px;">
+                          <div class="text-center px-2">
+                              <div class="avatar-sm mx-auto">
+                                  <div class="avatar-title fs-18 
+text-primary  text-primary rounded-circle">
+                                  <i class="bi bi-crosshair"></i>
+                                  </div>
+                              </div>
+
+                              <h5 class="fs-11 text-uppercase text-truncate mt-3 mb-0"><a href="#" class="text-body hyperlink" onclick="getLocation()">Location</a></h5>
+                          </div>
+                      </div>
+                      <div class="swiper-slide" role="group" aria-label="6 / 7" style="width: 141px; margin-right: 30px;">
+                          <div class="text-center px-2">
+                              <div class="avatar-sm mx-auto">
+                                  <div class="avatar-title fs-18 
+text-primary  text-primary rounded-circle">
+                                <mat-icon> contacts</mat-icon>
+                                  </div>
+                              </div>
+                              <h5 class="fs-11 text-uppercase text-truncate mt-3 mb-0"><a href="#" class="text-body hyperlink" data-bs-toggle="modal" data-bs-target=".contactModal">Contacts</a></h5>
+                          </div>
+                      </div>
+
+                      <div class="swiper-slide d-block d-sm-none" role="group" aria-label="7 / 7" style="margin-right: 30px;">
+                          <div class="text-center px-2">
+                              <div class="avatar-sm mx-auto">
+                                  <div class="avatar-title fs-18 
+text-primary  text-primary rounded-circle">
+                                      <i class="bx bx-microphone"></i>
+                                  </div>
+                              </div>
+                              <h5 class="fs-11 text-uppercase text-truncate mt-3 mb-0"><a href="#" class="text-body hyperlink">Audio</a></h5>
+                          </div>
+                      </div>
+                  </div>
+              <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+          </div>
+      </div>
+    </div> -->
+
+
+  <div class="chat-input d-flex align-items-center">
+    <!-- chat-input -->
+    <div class="d-flex align-items-center">
+      <div class="chat-input-links me-md-2 d-flex align-items-center">
+         <button mat-icon-button [matMenuTriggerFor]="menu" class="btn btn-link text-decoration-none btn-lg waves-effect">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="openCamera()">
+            <mat-icon>camera</mat-icon> Camera
+          </button>
+          <button mat-menu-item>
+            <mat-icon>image</mat-icon> Gallery
+          </button>
+          <button mat-menu-item>
+            <mat-icon>file_copy</mat-icon> File
+          </button>
+        </mat-menu>
+        <div class="links-list-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+          aria-label="Emoji" data-bs-original-title="Emoji">
+          <button type="button" class="btn btn-link text-decoration-none btn-lg waves-effect emoji-btn"
+            (click)="toggleEmojiPicker()">
+            <i class="bi bi-emoji-smile"></i>
+          </button>
+        </div>
+        <!-- Emoji Picker -->
+        <div class="emoji-picker-container" #emojiPickerContainer *ngIf="showEmojiPicker">
+          <button class="close-button" title="close Emoji board" (click)="toggleEmojiPicker()"><span
+              aria-hidden="true">&times;</span>
+          </button>
+          <emoji-mart (emojiSelect)="addEmoji($event)" set="apple"></emoji-mart>
+        </div>
+
+      </div>
+    </div>
+    <input placeholder="Type a message" [(ngModel)]="messageText" (keydown)="onTyping()" (keydown.enter)="sendMessage()"
+      (keyup)="onStopTyping()" class="full-width form-control">
+      <!-- Recorded Message UI -->
+<div *ngIf="recordedAudio" class="voice-message-container">
+  <button mat-icon-button class="btn btn-link delete-btn" (click)="deleteRecording()">
+      <mat-icon>delete</mat-icon>
+  </button>
+
+  <audio controls >
+    <source [src]="this.recordedAudio" type="audio/webm">
+  </audio>
+   <button mat-icon-button class="btn btn-link send-btn" (click)="sendVoiceMessage()">
+      <mat-icon>send</mat-icon>
+  </button>
+</div>
+    <div class="d-flex align-items-center">
+      <button mat-icon-button class="btn btn-link text-decoration-none btn-lg waves-effect" title="Hold to Record Audio"
+      [ngClass]="{'recording': isRecording}"
+      (pointerdown)="startRecording()" 
+      (pointerup)="stopRecording()">
+        <mat-icon title="Hold to Record Audio">{{ isRecording ? 'mic' : 'settings_voice' }}</mat-icon>
+            </button>
+      <button mat-icon-button (click)="sendMessage()" class="btn btn-link text-decoration-none btn-lg waves-effect">
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Right Panel (Initially Hidden) -->
+<div class="chat-info-panel " id="chatInfoPanel">
+  <div class="info-content text-center">
+    <i class="bi bi-cloud-download display-4"></i>
+    <p class="mt-3">
+      <i class="bi bi-file-lock2-fill"></i> Your messages are end-to-end encrypted.
+    </p>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<!-- Person info -->
+
+<div id="person" class="profile-container" *ngIf="selectedItem === 'person'">
+  <div class="profile-image">
+      <img src="https://themesdesign.in/chaton/layouts/assets/images/users/avatar-1.jpg" alt="Profile Image"> 
+  </div>
+  <h2 class="profile-name">Dushane Daniel</h2>
+  <p class="profile-title">Front-end Developer</p>
+  <p class="profile-description">A professional profile is an introductory section on your resume that highlights your relevant qualifications and skills.</p>
+
+  <div class="profile-info">
+      <i class="bi bi-person"></i>
+      <span>Dushane Daniel</span>
+  </div>
+  <div class="profile-info">
+      <i class="bi bi-telephone"></i>
+      <span>+(365) 1456 12584</span>
+  </div>
+  <div class="profile-info">
+      <i class="bi bi-envelope"></i>
+      <span>dushanedanielgmail.com</span>
+  </div>
+  <div class="profile-info">
+      <i class="bi bi-geo-alt"></i>
+      <span>California, USA</span>
+  </div>
+</div>
+<!-- Message -->
+<div id="messages"  *ngIf="selectedItem === 'messages'">
+  <h3>Messages ({{ totalMessages }})</h3>
+<div class="search-bar">
+  <input type="text" placeholder="Search here..." />
+</div>
+<div class="sidebar">
+   <div class="messages">
+    <div class="favourites">
+      <!-- <h6>FAVOURITES</h6> -->
+      <div *ngFor="let user of activeUsers" class="message-item" (click)="selectUser(user)">
+        <div class="avatar-container">
+          <div class="avatar">{{ getInitial(user.userName) }}</div>
+          <div class="status-indicator" [ngClass]="{ 'online': user.isOnline, 'offline': !user.isOnline }" ></div>
+          <!--  -->
+        </div>
+                <div class="message-content">
+          <h5>{{ user.userName }}</h5>
+          <p *ngIf="user.userName === typingUser" style="color: green;"> typing...</p>
+          <p *ngIf="user.userName !== typingUser" class="text-ellipsis " >{{ user.lastMessage }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

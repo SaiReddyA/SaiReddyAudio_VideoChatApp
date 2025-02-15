@@ -1,0 +1,11 @@
+<div class="grid-container">
+  <aside class="left-sidebar">
+    <app-header class="app-header"></app-header> 
+  </aside>
+  <main class="main">
+    <app-sidebar (userSelected)="onUserSelected($event)"></app-sidebar>
+  </main>
+  <section class="right-pane">
+    <app-chat-area [selectedUsers]="selectedUser"></app-chat-area>
+  </section>
+ </div>

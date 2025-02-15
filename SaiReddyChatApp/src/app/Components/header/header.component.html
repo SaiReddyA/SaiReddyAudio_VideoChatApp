@@ -1,0 +1,42 @@
+<aside class="d-flex flex-column align-items-center p-2 vh-100">
+    <!-- Logo -->
+    <img src="/TransLogo.png" alt="Logo" height="100" class="mb-3">
+  
+    <!-- Navigation Icons (Auto-spacing) -->
+    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+      <li class="nav-item" [ngClass]="{'active': activeItem === 'person'}" (click)="setActiveItem('person')">
+        <i class="bi bi-person fs-5"></i>
+      </li>
+      <li class="nav-item d-none d-lg-block" [ngClass]="{'active': activeItem === 'messages'}" (click)="setActiveItem('messages')">
+        <i class="bi bi-chat-left fs-5"></i>
+      </li>
+    </ul>
+  
+    
+    <!-- Theme Toggle & Profile Dropdown (Moved together) -->
+  <div class="mt-auto d-flex flex-column align-items-center gap-3">
+    <!-- Theme Toggle -->
+    <ul class="nav nav-pills nav-flush flex-column text-center">
+      <li class="nav-item" id="theme-toggle" (click)="toggle()" style="cursor: pointer;">
+        <i class="bi bi-moon fs-5"></i>
+      </li>
+    </ul>
+
+   
+    <button [matMenuTriggerFor]="menu" class="profile profile-button">
+      <img src="https://themesdesign.in/chaton/layouts/assets/images/users/avatar-1.jpg" 
+           alt="Profile" class="profile" width="40" height="40">
+    </button>
+    
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="setActiveItem('person')">
+        Profile <mat-icon>person_badge</mat-icon>
+      </button>
+      <button mat-menu-item>
+        Log out <mat-icon>logout</mat-icon>
+      </button>
+    </mat-menu>
+  </div>
+  </aside>
+  
+  
